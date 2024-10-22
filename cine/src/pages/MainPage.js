@@ -1,26 +1,73 @@
 import React from 'react';
 import Login from '../components/Login/Login';
-import Register from '../components/Register';
-import ProductCard from '../components/ProductCard';
+import Register from '../components/Register/Register';
+import Cartelera from '../components/Cartelera/Cartelera';
 
-const products = [
-  { id: 1, name: 'Product 1', description: 'Description 1', price: 10 },
-  { id: 2, name: 'Product 2', description: 'Description 2', price: 20 },
-  { id: 3, name: 'Product 3', description: 'Description 3', price: 30 },
+const data = [
+  {
+    title: "Movie Title 1",
+    text: "This is a longer card with supporting text below...",
+    footer: "Someone famous",
+    source: "Source Title 1",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/588.jpg"
+  },
+  {
+    title: "Movie Title 2",
+    text: "Another description for this card...",
+    footer: "Another famous person",
+    source: "Source Title 2",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/589.jpg"
+  },
+  {
+    title: "Movie Title 1",
+    text: "This is a longer card with supporting text below...",
+    footer: "Someone famous",
+    source: "Source Title 1",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/588.jpg"
+  },
+  {
+    title: "Movie Title 2",
+    text: "Another description for this card...",
+    footer: "Another famous person",
+    source: "Source Title 2",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/589.jpg"
+  },  {
+    title: "Movie Title 1",
+    text: "This is a longer card with supporting text below...",
+    footer: "Someone famous",
+    source: "Source Title 1",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/588.jpg"
+  },
+  {
+    title: "Movie Title 2",
+    text: "Another description for this card...",
+    footer: "Another famous person",
+    source: "Source Title 2",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/589.jpg"
+  },  {
+    title: "Movie Title 1",
+    text: "This is a longer card with supporting text below...",
+    footer: "Someone famous",
+    source: "Source Title 1",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/588.jpg"
+  },
+  {
+    title: "Movie Title 2",
+    text: "Another description for this card...",
+    footer: "Another famous person",
+    source: "Source Title 2",
+    imageUrl: "https://comprar2.cinecenter.com.bo/billboard/app/poster/generic/589.jpg"
+  },
 ];
 
 const MainPage = () => {
   return (
     <div>
-      <h1>Welcome to My E-commerce Site</h1>
-      <Login />
-      <Register />
-      <h2>Products</h2>
-      <div className="product-list">
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <br />
+      <Cartelera data={data}/>
+      <br />
+
+      <br />
     </div>
   );
 };
