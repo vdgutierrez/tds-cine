@@ -7,6 +7,7 @@ import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import SobreNosotros from './components/SobreNosotros/SobreNosotros';
+import CarteleraFiltrada from './components/CarteleraFiltrada/CarteleraFiltrada';
 
 function App() {
   return (
@@ -22,7 +23,7 @@ function App() {
         <div className="content-background"> {/* Aplica el fondo difuminado aquí */}
           <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route path="/cartelera" element={<MainPage />} />
+            <Route path="/cartelera" element={<CarteleraFiltrada />} />
             <Route path="/sobre-nosotros" element={<SobreNosotros />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
