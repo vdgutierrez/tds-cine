@@ -2,46 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const Cartelera = () => {
-  const [data, setData] = useState([
-    {
-      title: "Pelicula 1",
-      text: "Descripción de la Pelicula 1...",
-      footer: "Director Famoso",
-      source: "Fuente 1",
-      imageUrl: "https://via.placeholder.com/150"
-    },
-    {
-      title: "Pelicula 2",
-      text: "Descripción de la Pelicula 2...",
-      footer: "Director 2",
-      source: "Fuente 2",
-      imageUrl: "https://via.placeholder.com/150"
-    },
-    {
-      title: "Pelicula 3",
-      text: "Descripción de la Pelicula 3...",
-      footer: "Director 3",
-      source: "Fuente 3",
-      imageUrl: "https://via.placeholder.com/150"
-    }
-  ]); // Inicializamos con datos de prueba
-
+  const [data, setData] = useState([]); // Ya no usamos datos de prueba
   const [loading, setLoading] = useState(false); // Estado para manejar la carga
   const [error, setError] = useState(null); // Estado para manejar errores
 
-  // Función para obtener las películas desde la API o usar los datos de prueba
+  // Función para obtener las películas desde la API
   const fetchData = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      // Simula la carga de datos de la API, descomenta cuando la API esté disponible
-      // const response = await fetch('http://localhost:8080/api/peliculas/cartelera');
-      // if (!response.ok) {
-      //   throw new Error('Error en la solicitud a la API');
-      // }
-      // const result = await response.json();
-      // setData(result); // Almacena los datos en el estado
+      const response = await fetch('http://192.168.102.78:8080/api/peliculas/cartelera'); // URL de la API real
+      if (!response.ok) {
+        throw new Error('Error en la solicitud a la API');
+      }
+      const result = await response.json();
+      setData(result); // Almacena los datos en el estado
       setLoading(false); // Cambia el estado de carga
     } catch (error) {
       setError(error.message); // Si ocurre un error, lo almacena en el estado
@@ -77,12 +53,14 @@ const Cartelera = () => {
           {data.map((item, idx) => (
             <Col key={idx}>
               <Card>
-                <Card.Img variant="top" src={item.imageUrl} />
+                <Card.Img variant="top" src={item.poster} /> {/* Cambia a item.poster si la API devuelve la URL del póster */}
                 <Card.Body>
-                  <Card.Title>{item.title}</Card.Title>
-                  <Card.Text>{item.text}</Card.Text>
+                  <Card.Title>{item.titulo}</Card.Title>
+                  <Card.Text>{item.descripcion}</Card.Text>
+                  <Card.Text><strong>Duración:</strong> {item.duracion} min</Card.Text> {/* Muestra la duración */}
+                  <Card.Text><strong>Estudio:</strong> {item.estudio}</Card.Text> {/* Muestra el estudio */}
                   <footer className="blockquote-footer">
-                    {item.footer} in <cite title="Source Title">{item.source}</cite>
+                    {item.director} {/* Cambia a la propiedad que contiene el nombre del director */}
                   </footer>
                 </Card.Body>
               </Card>

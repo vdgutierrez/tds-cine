@@ -1,5 +1,13 @@
+/* Estilos personalizados para el card */
 .card-transparency {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-  }
-  
+  background-color: rgba(0, 0, 0, 0.8); /* Fondo negro con 80% de transparencia */
+  color: #f1f1f1; /* Texto en color claro */
+  border: none; /* Eliminar borde */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+/* Para asegurarse de que los títulos se destaquen */
+.card-transparency h1, 
+.card-transparency h3 {
+  color: #ffcc00; /* Títulos en color amarillo para destacarlos */
+}

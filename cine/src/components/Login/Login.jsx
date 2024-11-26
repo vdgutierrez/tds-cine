@@ -1,15 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { FaUser, FaLock } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; // Incorrecto
+import axios from 'axios';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Lógica para autenticación
-    navigate('/'); // Redirige a la página principal tras el login
+    try {
+      const response = await axios.post('http://192.168.102.78:8080/auth/login', {
+        email,
+        password,
+      });
+      const { token } = response.data;
+      localStorage.setItem('token', token); // Guardar el token en localStorage
+      const decodedToken = jwtDecode(token); // Decodificar el token
+      console.log('Usuario logueado:', decodedToken.sub); // Mostrar el correo en consola
+
+      navigate('/cartelera'); // Redirige a la pantalla de cartelera
+      window.location.reload(); // Recargar la página después de redirigir
+    } catch (error) {
+      console.error('Error de autenticación:', error);
+      alert('Usuario o contraseña incorrecta');
+    }
   };
 
   const handleRegisterRedirect = () => {
@@ -25,16 +43,32 @@ const Login = () => {
             <Form.Group className="mb-3" controlId="formUsuario">
               <Form.Label className="text-white">Usuario</Form.Label> {/* Label en blanco */}
               <div className="input-group">
-                <Form.Control type="text" placeholder="Usuario" required />
-                <span className="input-group-text"><FaUser /></span>
+                <Form.Control
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <span className="input-group-text">
+                  <FaUser />
+                </span>
               </div>
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formContraseña">
               <Form.Label className="text-white">Contraseña</Form.Label> {/* Label en blanco */}
               <div className="input-group">
-                <Form.Control type="password" placeholder="Contraseña" required />
-                <span className="input-group-text"><FaLock /></span>
+                <Form.Control
+                  type="password"
+                  placeholder="Contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <span className="input-group-text">
+                  <FaLock />
+                </span>
               </div>
             </Form.Group>
 
