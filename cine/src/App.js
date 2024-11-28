@@ -11,6 +11,7 @@ import SobreNosotros from './components/SobreNosotros/SobreNosotros';
 import CarteleraFiltrada from './components/CarteleraFiltrada/CarteleraFiltrada';
 import Detalle from './components/Detalle/Detalle';
 import Pago from './components/Pago/Pago';
+import Cartelera from './components/Cartelera/Cartelera';
 
 const App = () => {
   const [asientosSeleccionados, setAsientosSeleccionados] = useState([]); // Definir asientosSeleccionados
@@ -91,7 +92,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/cinema-room" element={<CinemaRoom pelicula={pelicula} asientos={asientos} precio={precio} />} />
-            <Route path="/cartelera" element={<CarteleraFiltrada />} />
+            <Route path="/cartelera" element={<Cartelera />} />
             <Route path="/sobre-nosotros" element={<SobreNosotros />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
