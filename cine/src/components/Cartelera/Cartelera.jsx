@@ -56,7 +56,7 @@ const Cartelera = () => {
                   <Card.Text><strong>Duración:</strong> {item.duracion} min</Card.Text>
                   <Card.Text><strong>Estudio:</strong> {item.estudio}</Card.Text>
                   <Link to={`/detalle/${item.id}`}>
-                    <Button variant="primary">Ver Detalles</Button>
+                    <Button variant="primary">Ver Detalle</Button>
                   </Link>
                   <footer className="blockquote-footer">
                     {item.director}
