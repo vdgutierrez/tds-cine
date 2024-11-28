@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CustomNavbar from './components/CustomNavbar/CustomNavbar';
 import Footer from './components/Footer/Footer';
 import MainPage from './pages/MainPage';  // Página principal
-import CinemaRoom from './components/Salas/CinemaRoom';  // Sala de cine
 import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import SobreNosotros from './components/SobreNosotros/SobreNosotros';
@@ -12,6 +11,7 @@ import CarteleraFiltrada from './components/CarteleraFiltrada/CarteleraFiltrada'
 import Detalle from './components/Detalle/Detalle';
 import Pago from './components/Pago/Pago';
 import Cartelera from './components/Cartelera/Cartelera';
+import CinemaRoom from './components/CinemaRoom/CinemaRoom';
 
 const App = () => {
   const [asientosSeleccionados, setAsientosSeleccionados] = useState([]); // Definir asientosSeleccionados
@@ -98,6 +98,7 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/detalle/:id" element={<Detalle />} />
             <Route path="/pago" element={<Pago pelicula={pelicula} asientosSeleccionados={asientosSeleccionados} total={total} />} />
+            <Route path="/cinema-room" element={<CinemaRoom />} />
           </Routes>
         </div>
         <Footer />
