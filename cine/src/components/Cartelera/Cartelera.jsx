@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap'; // Asegúrate de que Button esté importado
+import { Link } from 'react-router-dom'; // Asegúrate de que Link esté importado
 import './Cartelera.css';
 
 const Cartelera = () => {
@@ -54,6 +55,9 @@ const Cartelera = () => {
                   <Card.Text>{item.descripcion}</Card.Text>
                   <Card.Text><strong>Duración:</strong> {item.duracion} min</Card.Text>
                   <Card.Text><strong>Estudio:</strong> {item.estudio}</Card.Text>
+                  <Link to={`/detalle/${item.id}`}>
+                    <Button variant="primary">Ver Detalles</Button>
+                  </Link>
                   <footer className="blockquote-footer">
                     {item.director}
                   </footer>
