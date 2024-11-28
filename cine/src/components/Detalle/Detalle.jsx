@@ -7,41 +7,21 @@ const Detalle = () => {
   const navigate = useNavigate();
   
   const [pelicula, setPelicula] = useState(null);
+  const [error, setError] = useState(null); // Estado para manejar errores
 
   useEffect(() => {
-    // Datos de ejemplo, reemplazarlos con datos reales de la API
-    const datosDePrueba = {
-      id: 3,
-      titulo: "Pulp Fiction",
-      genero: "Crimen/Drama",
-      duracion: 154,
-      clasificacion: "R (Mayores de 18)",
-      poster: "https://storage.googleapis.com/siscine.appspot.com/https%3A//ejemplo.com/pulpfiction.jpg",
-      trailer: "https://ejemplo.com/pulpfiction-trailer.mp4",
-      formatos: [
-        { nombre: "2D", activo: false },
-        { nombre: "3D", activo: true }
-      ],
-      fechasDisponibles: [
-        { fecha: "2024-11-27", nombreDia: "miércoles", numeroDia: "27", nombreMes: "nov", activo: true },
-        { fecha: "2024-11-28", nombreDia: "jueves", numeroDia: "28", nombreMes: "nov", activo: false }
-      ],
-      horarios: [
-        { proyeccionId: 31, hora: "16:00:00", disponible: true },
-        { proyeccionId: 39, hora: "19:00:00", disponible: true }
-      ]
-    };
-
-    // Aquí puedes hacer la llamada a la API según el id
-    // setPelicula(datosDePrueba); // Para pruebas
-
-    // Llamar a la API (si está disponible)
+    // Llamada a la API
     const fetchPelicula = async () => {
       try {
         const response = await fetch(`http://localhost:8080/api/peliculas/${id}`);
+        if (!response.ok) {
+          throw new Error('No se pudo obtener los detalles de la película');
+        }
         const data = await response.json();
+        console.log("Datos recibidos:", data); // Depuración
         setPelicula(data);
       } catch (error) {
+        setError(error.message); // Si ocurre un error, lo almacena en el estado
         console.error("Error al cargar la película:", error);
       }
     };
@@ -49,8 +29,12 @@ const Detalle = () => {
     fetchPelicula();
   }, [id]); // Recarga cuando cambia el id
 
+  if (error) {
+    return <div className="text-center">Error: {error}</div>;
+  }
+
   if (!pelicula) {
-    return <h1>Cargando detalles...</h1>;
+    return <h1 className="text-center">Cargando detalles...</h1>;
   }
 
   return (
@@ -84,7 +68,12 @@ const Detalle = () => {
                   src={pelicula.trailer}
                   title="Tráiler"
                   allowFullScreen
-                  style={{ width: "100%", height: "400px", borderRadius: "8px", border: "1px solid #ccc" }}
+                  style={{
+                    width: "100%",
+                    height: "400px",
+                    borderRadius: "8px",
+                    border: "1px solid #ccc",
+                  }}
                 ></iframe>
               </div>
             </div>
