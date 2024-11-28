@@ -1,8 +1,150 @@
+/* Asegura que el fondo ocupe todo el ancho y la altura */
 .content-background {
   background: linear-gradient(to bottom, #002244, #0b559e);
-  min-height: 100vh;
-  padding: 20px;
+  min-height: 100vh; /* Hace que el fondo ocupe el 100% de la altura de la ventana */
+  padding: 0; /* Elimina cualquier relleno para que ocupe todo el espacio */
+  width: 100%; /* Asegura que ocupe todo el ancho */
+  display: flex; /* Utiliza flexbox para organizar los elementos dentro */
+  flex-direction: column; /* Alinea los elementos de arriba a abajo */
+  justify-content: flex-start; /* Alinea los elementos desde el principio de la columna */
 }
+
+/* Asegura que el texto blanco se aplique correctamente */
 .text-white {
   color: white;
 }
+
+/* Ajuste global de márgenes y rellenos para todo el documento */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Garantiza que el body y el html ocupen toda la ventana */
+body, html {
+  height: 100%; /* Asegura que el body ocupe toda la altura */
+  width: 100%;  /* Asegura que el body ocupe todo el ancho */
+  display: flex;
+  flex-direction: column; /* Mantiene el contenido en una sola columna */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente más moderna */
+  background-color: #001F3F; /* Fondo global para el cuerpo de la aplicación */
+}
+
+/* Asegura que el contenedor principal ocupe todo el espacio disponible */
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Asegura que los botones sean más grandes y visibles */
+button {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+/* Estilos de fondo para la página principal */
+.App {
+  background-color: #001F3F; /* Fondo oscuro para toda la app */
+  color: white; /* Color blanco para todo el texto */
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+}
+
+/* Añadir margen para el contenido principal */
+main {
+  flex-grow: 1;
+}
+
+/* Añadir bordes y espaciado en el contenido de los cards */
+.card {
+  background-color: #2a2f40;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+  font-weight: bold;
+  color: #f1f1f1;
+}
+
+.card-body {
+  color: #ccc;
+}
+
+.card-footer {
+  text-align: center;
+  background-color: #333;
+}
+
+/* Asegurar que el Footer se quede al final de la página */
+footer {
+  margin-top: auto;
+  background-color: #222;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+/* App.css */
+
+/* Contenedor de la pantalla */
+.screen-container {
+  position: relative;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilo de la pantalla */
+.screen {
+  background: linear-gradient(to bottom, #444444, #222222); /* Degradado oscuro */
+  border-radius: 50px;  /* Curvatura para simular la pantalla */
+  width: 80%;  /* Ajusta el tamaño de la pantalla */
+  height: 200px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.screen-text {
+  font-size: 2rem;
+  color: white;  /* Texto blanco */
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Mapa de asientos */
+.seat-map {
+  margin-top: 20px;
+}
+
+.seat-map .row {
+  margin-bottom: 10px;  /* Espacio entre las filas */
+}
+
+.seat-map .col {
+  padding: 0; /* Elimina el relleno extra */
+}
+
+/* Estilo para las letras de las filas */
+.row-letter {
+  font-size: 16px;
+  font-weight: bold;
+  color: white; /* Letras blancas para las filas */
+}
+
+/* Estilo para los números de las columnas */
+.column-number {
+  font-size: 16px;
+  font-weight: bold;
+  color: white; /* Números de columna en blanco */
+}
+

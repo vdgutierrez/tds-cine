@@ -8,7 +8,7 @@ const CinemaRoom = ({ pelicula, precio }) => {
 
   // Simulamos la llamada al endpoint con datos estáticos
   useEffect(() => {
-    // Datos estáticos de ejemplo que recibimos de la API
+    // Datos estáticos de ejemplo
     const datosAsientos = {
       "proyeccionId": 86,
       "dimensiones": { "filas": 5, "columnas": 10 },
@@ -47,11 +47,11 @@ const CinemaRoom = ({ pelicula, precio }) => {
           { "estado": "DISPONIBLE", "numero": "09", "fila": "B", "id": 19 },
           { "estado": "DISPONIBLE", "numero": "10", "fila": "B", "id": 20 }
         ],
-        // ... Las demás filas C, D, E se pueden agregar de forma similar
+        // ... Agregar C, D y E de forma similar
       }
     };
 
-    // Asignamos los asientos a nuestro estado
+    // Asignamos los asientos al estado
     setAsientos(Object.values(datosAsientos.asientosPorFila).flat());
   }, []);
 
@@ -75,31 +75,25 @@ const CinemaRoom = ({ pelicula, precio }) => {
 
   // Función para enviar la reserva
   const handleBuyTickets = async () => {
-    // Convertimos los asientos seleccionados al formato adecuado
     const asientosSeleccionadosIds = asientosSeleccionados.map(asiento => {
-      return `${asiento.slice(0, 1)}${asiento.slice(1)}`; // Ejemplo: "A01"
+      // Convertir "A03" en "A03" (formato de número de asiento)
+      return `${asiento.slice(0, 1)}${asiento.slice(1)}`;
     });
 
-    try {
-      const response = await fetch(`http://localhost:8080/api/reservas?proyeccionId=86`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(asientosSeleccionadosIds), // Enviamos los asientos seleccionados
-      });
+    // Llamada al endpoint POST
+    const response = await fetch(`http://localhost:8080/api/reservas?proyeccionId=86`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(asientosSeleccionadosIds),
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        console.log("Reserva exitosa:", data);
-        alert('¡Entradas compradas con éxito!');
-      } else {
-        console.error("Error en la reserva:", data);
-        alert('Error al realizar la compra.');
-      }
-    } catch (error) {
-      console.error('Error de red o de servidor', error);
-      alert('No se pudo realizar la compra, intenta nuevamente.');
+    const data = await response.json();
+    if (response.ok) {
+      console.log("Reserva exitosa:", data);
+    } else {
+      console.error("Error en la reserva:", data);
     }
   };
 

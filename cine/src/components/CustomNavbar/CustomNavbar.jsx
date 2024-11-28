@@ -51,6 +51,7 @@ function CustomNavbar() {
               <>
                 <Button as={Link} to="/login" variant="danger" className="me-2">INICIAR SESIÓN</Button>
                 <Button as={Link} to="/register" variant="danger">REGISTRARSE</Button>
+                
               </>
             )}
           </div>

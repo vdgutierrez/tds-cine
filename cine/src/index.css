@@ -1,25 +1,47 @@
+/* Asegura que todos los elementos ocupen el espacio disponible sin márgenes o rellenos innecesarios */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-
- body {
-  margin: 0;
+/* Estilos generales para el body y html */
+body, html {
+  height: 100%;  /* Asegura que el body ocupe toda la altura */
+  width: 100%;   /* Asegura que el body ocupe todo el ancho */
+  display: flex;
+  flex-direction: column; /* Mantiene los elementos en una sola columna */
+  justify-content: flex-start; /* Alinea el contenido hacia arriba */
+  align-items: stretch; /* Asegura que los elementos se expandan a lo largo del ancho */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: #001F3F;
+  background: #001F3F; /* Color de fondo */
 }
 
+/* Ajuste para la clase content-blackground */
+.content-background {
+  flex: 1; /* Ocupa el espacio restante en la pantalla */
+  width: 100%; /* Asegura que ocupe el 100% del ancho */
+}
+
+/* Estilo para código */
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 767px) {
+  body {
+    padding: 10px; /* Ajuste de padding para dispositivos pequeños */
+  }
+  .text-white {
+    font-size: 14px; /* Reducción del tamaño de fuente para pantallas pequeñas */
+  }
+  .wrapper {
+    width: 100%;
+    padding: 20px; /* Ajuste de padding para el contenedor en pantallas pequeñas */
+  }
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import './Cartelera.css';
 
 const Cartelera = () => {
   const [data, setData] = useState([]); // Ya no usamos datos de prueba
@@ -43,24 +44,18 @@ const Cartelera = () => {
   return (
     <div className="d-flex justify-content-center" style={{ padding: '5%' }}>
       <Container>
-        <Row className="mb-4">
-          <Col>
-            <h1 className="text-center text-white">Cartelera</h1> {/* Título en blanco */}
-          </Col>
-        </Row>
-
-        <Row xs={1} md={5} className="g-4">
+        <Row xs={1} sm={2} md={3} lg={4} className="g-4">
           {data.map((item, idx) => (
             <Col key={idx}>
               <Card>
-                <Card.Img variant="top" src={item.poster} /> {/* Cambia a item.poster si la API devuelve la URL del póster */}
+                <Card.Img variant="top" src={item.poster} />
                 <Card.Body>
                   <Card.Title>{item.titulo}</Card.Title>
                   <Card.Text>{item.descripcion}</Card.Text>
-                  <Card.Text><strong>Duración:</strong> {item.duracion} min</Card.Text> {/* Muestra la duración */}
-                  <Card.Text><strong>Estudio:</strong> {item.estudio}</Card.Text> {/* Muestra el estudio */}
+                  <Card.Text><strong>Duración:</strong> {item.duracion} min</Card.Text>
+                  <Card.Text><strong>Estudio:</strong> {item.estudio}</Card.Text>
                   <footer className="blockquote-footer">
-                    {item.director} {/* Cambia a la propiedad que contiene el nombre del director */}
+                    {item.director}
                   </footer>
                 </Card.Body>
               </Card>
