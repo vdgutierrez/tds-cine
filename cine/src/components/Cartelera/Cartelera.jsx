@@ -14,10 +14,26 @@ const Cartelera = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://192.168.102.78:8080/api/peliculas/cartelera'); // URL de la API real
+      const token = localStorage.getItem('token'); // Obtener el token desde el localStorage
+      if (!token) {
+        setError('No estás autenticado');
+        setLoading(false);
+        return;
+      }
+
+      // Configurar los encabezados con el token de autorización
+      const response = await fetch('http://192.168.102.78:8080/api/peliculas/cartelera', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` // Enviar el token en el encabezado Authorization
+        }
+      });
+
       if (!response.ok) {
         throw new Error('Error en la solicitud a la API');
       }
+
       const result = await response.json();
       setData(result); // Almacena los datos en el estado
       setLoading(false); // Cambia el estado de carga

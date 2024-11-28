@@ -5,18 +5,34 @@ import { Container, Row, Col, Card, Button } from "react-bootstrap";
 const Detalle = () => {
   const { id } = useParams(); // Obtener el id desde la URL
   const navigate = useNavigate();
-  
+
   const [pelicula, setPelicula] = useState(null);
   const [error, setError] = useState(null); // Estado para manejar errores
 
   useEffect(() => {
-    // Llamada a la API
+    // Función para obtener el token desde localStorage
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError("No estás autenticado. Por favor inicia sesión.");
+      return; // Si no hay token, detenemos la ejecución.
+    }
+
+    // Llamada a la API para obtener los detalles de la película
     const fetchPelicula = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/peliculas/${id}`);
+        const response = await fetch(`http://localhost:8080/api/peliculas/${id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // Incluimos el token en los headers
+          },
+        });
+
         if (!response.ok) {
-          throw new Error('No se pudo obtener los detalles de la película');
+          throw new Error("No se pudo obtener los detalles de la película");
         }
+        
         const data = await response.json();
         console.log("Datos recibidos:", data); // Depuración
         setPelicula(data);
