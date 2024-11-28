@@ -32,7 +32,7 @@ const Detalle = () => {
         if (!response.ok) {
           throw new Error("No se pudo obtener los detalles de la película");
         }
-        
+
         const data = await response.json();
         console.log("Datos recibidos:", data); // Depuración
         setPelicula(data);
@@ -46,12 +46,17 @@ const Detalle = () => {
   }, [id]); // Recarga cuando cambia el id
 
   if (error) {
-    return <div className="text-center">Error: {error}</div>;
+    return <div className="text-center">{error}</div>;
   }
 
   if (!pelicula) {
     return <h1 className="text-center">Cargando detalles...</h1>;
   }
+
+  const handleContinue = () => {
+    // Redirige al componente `/cinema-room`
+    navigate("/cinema-room");
+  };
 
   return (
     <div className="d-flex justify-content-center" style={{ padding: "5%" }}>
@@ -111,6 +116,13 @@ const Detalle = () => {
                 <p>{pelicula.descripcion}</p>
               </Card.Body>
             </Card>
+
+            {/* Botón Continuar */}
+            <div className="text-center mt-4">
+              <Button variant="primary" onClick={handleContinue}>
+                Continuar
+              </Button>
+            </div>
           </Col>
         </Row>
       </Container>
