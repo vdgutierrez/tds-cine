@@ -73,7 +73,7 @@ const App = () => {
   ]);
 
   const pelicula = {
-    titulo: "TERRIFIER 3: PAYASO SINIESTRO",
+    titulo: "TERRIFIEfsdgR 3: PAYASO SINIESTRO",
     detalle: "Una película de terror sobre un payaso asesino que acecha en la oscuridad.",
     duracion: "120 minutos"
   };
