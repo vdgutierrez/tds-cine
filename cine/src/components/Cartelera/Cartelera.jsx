@@ -22,7 +22,7 @@ const Cartelera = () => {
       }
 
       // Configurar los encabezados con el token de autorización
-      const response = await fetch('http://192.168.102.78:8080/api/peliculas/cartelera', {
+      const response = await fetch('http://localhost:8080/api/peliculas/cartelera', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
