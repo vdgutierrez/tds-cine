@@ -1,72 +1,133 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { QRCodeCanvas } from 'qrcode.react';
 
-const PagoPelicula = ({ pelicula, asientosSeleccionados, total }) => {
-  const [metodoPago, setMetodoPago] = useState('Transferencia QR'); // Método de pago por defecto
+const Pago = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { reserva } = location.state || {};
+  const [tiempoRestante, setTiempoRestante] = useState('');
 
-  // Generamos la URL de pago (simulando una URL de pago)
-  const urlPago = "http://localhost:8080/pago?pelicula=" + encodeURIComponent(pelicula.titulo) + "&total=" + total;
+  // Efecto para el contador de tiempo
+  useEffect(() => {
+    if (!reserva) return;
 
-  return (
-    <Container>
-      <h1 className="text-center mt-4">Proceso de Pago</h1>
-      <Row className="mt-4">
-        <Col xs={12} md={6}>
-          {/* Información de la película seleccionada */}
-          <Card className="mb-4">
-            <Card.Body>
-              <Card.Title>{pelicula.titulo}</Card.Title>
-              <Card.Text><strong>Formato:</strong> {pelicula.formatoSeleccionado}</Card.Text>
-              <Card.Text><strong>Fecha:</strong> {pelicula.fechaSeleccionada}</Card.Text>
-              <Card.Text><strong>Asientos Seleccionados:</strong> {asientosSeleccionados.join(', ')}</Card.Text>
-              <Card.Text><strong>Total de entradas:</strong> {asientosSeleccionados.length}</Card.Text>
-            </Card.Body>
-          </Card>
+    const calcularTiempoRestante = () => {
+      const expiracion = new Date(reserva.fechaExpiracion);
+      const ahora = new Date();
+      const diferencia = expiracion - ahora;
 
-          {/* Métodos de pago */}
-          <Card className="mb-4">
-            <Card.Body>
-              <h5>Métodos de pago</h5>
-              <Button variant={metodoPago === 'Transferencia QR' ? 'primary' : 'outline-primary'} onClick={() => setMetodoPago('Transferencia QR')}>
-                Pago en Linea (Transferencia QR)
-              </Button>
-              <Button variant={metodoPago === 'Tarjeta de Crédito' ? 'primary' : 'outline-primary'} onClick={() => setMetodoPago('Tarjeta de Crédito')}>
-                Tarjeta de Crédito
-              </Button>
-              <Button variant={metodoPago === 'Paypal' ? 'primary' : 'outline-primary'} onClick={() => setMetodoPago('Paypal')}>
-                Paypal
-              </Button>
-            </Card.Body>
-          </Card>
+      if (diferencia < 0) {
+        setTiempoRestante('EXPIRADO');
+        return false;
+      }
 
-        </Col>
+      const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+      setTiempoRestante(`${minutos}:${segundos.toString().padStart(2, '0')}`);
+      return true;
+    };
 
-        <Col xs={12} md={6}>
-          {/* Imagen de pago en lugar del QR */}
-          <Card className="mb-4">
-            <Card.Body>
-              <h5>Pago en Linea (Transferencia QR)</h5>
-              <p>Para completar tu pago, abre tu aplicación de billetera o banca móvil y escanea el siguiente código QR:</p>
-              {/* Imagen de ejemplo */}
-              <img 
-                src="https://via.placeholder.com/256x256.png?text=Escanea+para+Pagar" 
-                alt="Código QR de pago"
-                style={{ width: '100%', maxWidth: '256px', height: 'auto' }} 
-              />
-              <p className="mt-3"><strong>Total a pagar:</strong> ${total}</p>
-            </Card.Body>
-          </Card>
+    // Iniciar el contador
+    calcularTiempoRestante();
+    const intervalo = setInterval(() => {
+      const continuarContando = calcularTiempoRestante();
+      if (!continuarContando) {
+        clearInterval(intervalo);
+      }
+    }, 1000);
 
-          {/* Botón para completar el pago */}
-          <div className="text-center">
-            <Button variant="success" onClick={() => alert('Pago completado!')}>
-              Verificar Pago
+    return () => clearInterval(intervalo);
+  }, [reserva]);
+
+  // Si no hay reserva, mostrar error
+  if (!reserva) {
+    return (
+      <div className="content-background">
+        <Container>
+          <div className="text-center text-white">
+            <h2>Error</h2>
+            <p>No se encontraron datos de la reserva</p>
+            <Button 
+              variant="primary" 
+              onClick={() => navigate('/cartelera')}
+              style={{ backgroundColor: '#0b559e', borderColor: '#0b559e' }}
+            >
+              Volver a Cartelera
             </Button>
           </div>
-        </Col>
-      </Row>
-    </Container>
+        </Container>
+      </div>
+    );
+  }
+
+  // Función para formatear la fecha
+  const formatearFecha = (fecha) => {
+    return new Date(fecha).toLocaleString('es-ES', { 
+      dateStyle: 'medium', 
+      timeStyle: 'short' 
+    });
+  };
+
+  return (
+    <div className="content-background" style={{ padding: '5%' }}>
+      <Container>
+        <Row className="justify-content-center">
+          <Col xs={12} md={8}>
+            <Card style={{ backgroundColor: '#2a2f40', border: 'none' }}>
+              <Card.Body className="text-white">
+                <h2 className="text-center mb-4">Resumen de la Reserva</h2>
+                
+                {/* QR Code */}
+                <div className="text-center mb-4">
+                  <QRCodeCanvas 
+                    value={reserva.codigoPago}
+                    size={200}
+                    level="H"
+                    style={{ padding: '10px', backgroundColor: 'white' }}
+                  />
+                  <p className="mt-2">Código de Pago: {reserva.codigoPago}</p>
+                </div>
+
+                {/* Detalles de la reserva */}
+                <div className="mb-4">
+                  <h4 className="border-bottom pb-2">Detalles de la Reserva</h4>
+                  <p><strong>Asientos:</strong> {reserva.asientosSeleccionados.join(', ')}</p>
+                  <p><strong>Monto Total:</strong> ${reserva.montoTotal}</p>
+                  <p><strong>Estado:</strong> {reserva.estadoPago}</p>
+                  <p className="text-warning">
+                    <strong>Tiempo restante para pagar:</strong> {tiempoRestante}
+                  </p>
+                  <p><strong>Expira:</strong> {formatearFecha(reserva.fechaExpiracion)}</p>
+                </div>
+
+                {/* Instrucciones de pago */}
+                <div className="mb-4">
+                  <h4 className="border-bottom pb-2">Instrucciones de Pago</h4>
+                  <ol className="ps-3">
+                    <li>Escanea el código QR con tu aplicación bancaria</li>
+                    <li>Realiza el pago por ${reserva.montoTotal}</li>
+                    <li>Una vez completado el pago, recibirás tus entradas por correo</li>
+                  </ol>
+                </div>
+
+                {/* Botones de acción */}
+                <div className="d-flex justify-content-between mt-4">
+                  <Button 
+                    variant="secondary"
+                    onClick={() => navigate('/cartelera')}
+                  >
+                    Volver a Cartelera
+                  </Button>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 
-export default PagoPelicula;
+export default Pago;

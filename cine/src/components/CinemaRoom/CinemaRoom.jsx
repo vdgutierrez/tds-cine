@@ -54,6 +54,39 @@ const CinemaRoom = () => {
       setSelectedSeats([...selectedSeats, seatId]);
     }
   };
+  const handleCompra = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("No estás autenticado. Por favor inicia sesión.");
+      return;
+    }
+  
+    try {
+      // Formatear asientos al formato requerido (dos dígitos)
+      const asientosFormateados = selectedSeats.map(asiento => {
+        const fila = asiento[0];
+        const numero = asiento.slice(1).padStart(2, '0');
+        return `${fila}${numero}`;
+      });
+  
+      const response = await fetch(`http://localhost:8080/api/reservas?proyeccionId=${proyeccionId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(asientosFormateados)
+      });
+  
+      if (!response.ok) throw new Error('Error al procesar la reserva');
+      
+      const reserva = await response.json();
+      // Navegar a la página de pago con los datos de la reserva
+      navigate('/pago', { state: { reserva } });
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   // Color del asiento según su estado
   const getSeatColor = (estado, isSelected) => {
@@ -166,7 +199,7 @@ const CinemaRoom = () => {
                     size="lg"
                     style={{ backgroundColor: '#0b559e', borderColor: '#0b559e' }}
                     disabled={selectedSeats.length === 0}
-                    onClick={() => {/* Aquí irá la lógica de compra */}}
+                    onClick={handleCompra}
                   >
                     Comprar entradas
                   </Button>
