@@ -1,12 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button } from 'react-bootstrap'; // Asegúrate de que Button esté importado
-import { Link } from 'react-router-dom'; // Asegúrate de que Link esté importado
-import './Cartelera.css';
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Card, Button } from "react-bootstrap"; // Asegúrate de que Button esté importado
+import { Link, useNavigate } from "react-router-dom"; // Asegúrate de que Link y useNavigate estén importados
+import { jwtDecode } from "jwt-decode";
+import "./Cartelera.css";
 
 const Cartelera = () => {
   const [data, setData] = useState([]); // Ya no usamos datos de prueba
   const [loading, setLoading] = useState(false); // Estado para manejar la carga
   const [error, setError] = useState(null); // Estado para manejar errores
+  const [userRole, setUserRole] = useState(null); // Estado para manejar el rol del usuario
+  const navigate = useNavigate(); // Hook para manejar la navegación
+
+  // Función para obtener el rol del usuario desde el token
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setUserRole(decoded.authorities); // Extraer el rol del token
+    }
+  }, []);
 
   // Función para obtener las películas desde la API
   const fetchData = async () => {
@@ -14,24 +26,27 @@ const Cartelera = () => {
     setError(null);
 
     try {
-      const token = localStorage.getItem('token'); // Obtener el token desde el localStorage
+      const token = localStorage.getItem("token"); // Obtener el token desde el localStorage
       if (!token) {
-        setError('No estás autenticado');
+        setError("No estás autenticado");
         setLoading(false);
         return;
       }
 
       // Configurar los encabezados con el token de autorización
-      const response = await fetch('http://localhost:8080/api/peliculas/cartelera', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Enviar el token en el encabezado Authorization
+      const response = await fetch(
+        "http://localhost:8080/api/peliculas/cartelera",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Enviar el token en el encabezado Authorization
+          },
         }
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Error en la solicitud a la API');
+        throw new Error("Error en la solicitud a la API");
       }
 
       const result = await response.json();
@@ -59,7 +74,7 @@ const Cartelera = () => {
   }
 
   return (
-    <div className="d-flex justify-content-center" style={{ padding: '5%' }}>
+    <div className="d-flex justify-content-center" style={{ padding: "5%" }}>
       <Container>
         <Row xs={1} sm={2} md={3} lg={4} className="g-4">
           {data.map((item, idx) => (
@@ -69,14 +84,24 @@ const Cartelera = () => {
                 <Card.Body>
                   <Card.Title>{item.titulo}</Card.Title>
                   <Card.Text>{item.descripcion}</Card.Text>
-                  <Card.Text><strong>Duración:</strong> {item.duracion} min</Card.Text>
-                  <Card.Text><strong>Estudio:</strong> {item.estudio}</Card.Text>
+                  <Card.Text>
+                    <strong>Duración:</strong> {item.duracion} min
+                  </Card.Text>
+                  <Card.Text>
+                    <strong>Estudio:</strong> {item.estudio}
+                  </Card.Text>
                   <Link to={`/detalle/${item.id}`}>
                     <Button variant="primary">Ver Detalle</Button>
                   </Link>
-                  <footer className="blockquote-footer">
-                    {item.director}
-                  </footer>
+                  {userRole === "ROLE_ADMIN" && (
+                    <Button
+                      variant="warning"
+                      onClick={() => navigate(`/programar-pelicula?peliculaId=${item.id}`)}
+                    >
+                      Programar Función
+                    </Button>
+                  )}
+                  <footer className="blockquote-footer">{item.director}</footer>
                 </Card.Body>
               </Card>
             </Col>

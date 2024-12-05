@@ -2,57 +2,76 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-
 const ProgramarPeliculas = () => {
   const [salasProgramadas, setSalasProgramadas] = useState([]);
   const [tiposProyeccion, setTiposProyeccion] = useState([]);
-  const [peliculas, setPeliculas] = useState([]); // Supongamos que tienes una lista de películas
+  const [peliculas, setPeliculas] = useState([]);
   const [userRole, setUserRole] = useState(null);
   const [selectedSala, setSelectedSala] = useState("");
   const [selectedProyeccion, setSelectedProyeccion] = useState("");
   const [selectedHorario, setSelectedHorario] = useState("");
   const [selectedPeliculaId, setSelectedPeliculaId] = useState(null);
 
+  // Obtener datos al cargar el componente
   useEffect(() => {
-    // Obtener el rol del usuario desde el token
     const token = localStorage.getItem("token");
-    if (token) {
-      const decoded = jwtDecode(token);
-      setUserRole(decoded.authorities);
-    }
-
-    // Obtener las salas programadas
-    axios
-      .get("http://localhost:8080/api/admin/salas/programadas")
-      .then((response) => setSalasProgramadas(response.data))
-      .catch((error) => console.error("Error al obtener salas:", error));
-
-    // Obtener los tipos de proyección
-    axios
-      .get("http://localhost:8080/api/admin/proyecciones/tipos")
-      .then((response) => setTiposProyeccion(response.data))
-      .catch((error) => console.error("Error al obtener tipos de proyección:", error));
-
-    // Simulación: Lista de películas
-    setPeliculas([
-      { id: 1, titulo: "Película 1" },
-      { id: 2, titulo: "Película 2" },
-    ]);
-  }, []);
-
-  const handleProgramar = () => {
-    if (!selectedSala || !selectedProyeccion || !selectedHorario || !selectedPeliculaId) {
-      alert("Por favor, selecciona todos los campos antes de programar.");
+    if (!token) {
+      alert("No se encontró un token. Por favor, inicia sesión.");
       return;
     }
 
+    const decoded = jwtDecode(token);
+    setUserRole(decoded.authorities);
+
+    // Obtener las películas desde el backend
+    axios
+      .get("http://localhost:8080/api/admin/peliculas", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => setPeliculas(response.data))
+      .catch((error) => console.error("Error al obtener películas:", error));
+
+    // Obtener las salas programadas
+    axios
+      .get("http://localhost:8080/api/admin/salas/programadas", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => setSalasProgramadas(response.data))
+      .catch((error) =>
+        console.error("Error al obtener salas programadas:", error)
+      );
+
+    // Obtener los tipos de proyección
+    axios
+      .get("http://localhost:8080/api/admin/proyecciones/tipos", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => setTiposProyeccion(response.data))
+      .catch((error) =>
+        console.error("Error al obtener tipos de proyección:", error)
+      );
+  }, []);
+
+  // Manejar la programación de la película
+  const handleProgramar = () => {
+    if (
+      !selectedSala ||
+      !selectedProyeccion ||
+      !selectedHorario ||
+      !selectedPeliculaId
+    ) {
+      alert("Por favor, completa todos los campos para programar.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
     const body = {
       peliculaId: selectedPeliculaId,
       proyecciones: [
         {
           salaId: selectedSala,
           tipoProyeccionId: selectedProyeccion,
-          fechaInicio: "2024-12-01", // Puedes agregar un picker de fecha
+          fechaInicio: "2024-12-01", // Cambia esto si necesitas fechas dinámicas
           fechaFin: "2024-12-07",
           horarios: [selectedHorario],
         },
@@ -60,9 +79,16 @@ const ProgramarPeliculas = () => {
     };
 
     axios
-      .post("http://localhost:8080/api/admin/programacion/peliculas", body)
+      .post("http://localhost:8080/api/admin/programacion/peliculas", body, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((response) => {
-        alert("Programación completada: " + response.data.mensaje);
+        alert(`Programación completada: ${response.data.mensaje}`);
+        // Reinicia los campos después de programar
+        setSelectedPeliculaId(null);
+        setSelectedSala("");
+        setSelectedProyeccion("");
+        setSelectedHorario("");
       })
       .catch((error) => {
         console.error("Error al programar película:", error);
@@ -70,6 +96,7 @@ const ProgramarPeliculas = () => {
       });
   };
 
+  // Verifica si el usuario es administrador
   if (userRole !== "ROLE_ADMIN") {
     return <p>No tienes permisos para acceder a esta funcionalidad.</p>;
   }
@@ -78,6 +105,7 @@ const ProgramarPeliculas = () => {
     <div>
       <h1>Programar Películas</h1>
 
+      {/* Lista de películas */}
       {peliculas.map((pelicula) => (
         <div key={pelicula.id}>
           <h3>{pelicula.titulo}</h3>
@@ -87,6 +115,7 @@ const ProgramarPeliculas = () => {
         </div>
       ))}
 
+      {/* Formulario de programación */}
       {selectedPeliculaId && (
         <div>
           <h2>Programar Función para Película {selectedPeliculaId}</h2>
@@ -109,7 +138,7 @@ const ProgramarPeliculas = () => {
             value={selectedProyeccion}
             onChange={(e) => setSelectedProyeccion(e.target.value)}
           >
-            <option value="">Seleccionar Tipo de Proyección</option>
+            <option value="">Seleccionar Tipo</option>
             {tiposProyeccion.map((tipo) => (
               <option key={tipo.id} value={tipo.id}>
                 {tipo.nombre}
