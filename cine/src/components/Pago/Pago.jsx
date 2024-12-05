@@ -41,7 +41,7 @@ const Pago = () => {
     return () => clearInterval(intervalo);
   }, [reserva]);
 
-  // Si no hay reserva, mostrar error
+
   if (!reserva) {
     return (
       <div className="content-background">
@@ -62,7 +62,6 @@ const Pago = () => {
     );
   }
 
-  // Función para formatear la fecha
   const formatearFecha = (fecha) => {
     return new Date(fecha).toLocaleString('es-ES', { 
       dateStyle: 'medium', 
